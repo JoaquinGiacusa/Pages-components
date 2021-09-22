@@ -456,46 +456,82 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"4aleK":[function(require,module,exports) {
 var _router = require("./router");
+var _header = require("./components/header");
+var _textField = require("./components/text-field");
+var _footer = require("./components/footer");
+var _text = require("./components/text");
+var _button = require("./components/button");
+var _selectFild = require("./components/select-fild");
 (function() {
     const root = document.querySelector(".root");
+    _header.initHeaderComp();
+    _text.initTextComp();
+    _button.initButtonComp();
+    _textField.initTextField();
+    _selectFild.initSelectField();
+    _footer.initFooterComp();
     _router.initRouter(root);
 })();
 
-},{"./router":"b2iia"}],"b2iia":[function(require,module,exports) {
+},{"./router":"b2iia","./components/header":"1WBLn","./components/text-field":"l7C0L","./components/footer":"4nDUJ","./components/text":"8YEyP","./components/button":"3uBrB","./components/select-fild":"l2z65"}],"b2iia":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-/* findAndProccessLinks(); */ parcelHelpers.export(exports, "initRouter", ()=>initRouter
+parcelHelpers.export(exports, "initRouter", ()=>initRouter
 );
-function handleRoute(route) {
-    const routes = [
-        {
-            path: /\/div1/,
-            component: "hola"
-        },
-        {
-            path: /\/inbox\/./,
-            component: null
-        },
-        {
-            path: /\/sent/,
-            component: null
-        }, 
-    ];
-    for (const r of routes)if (r.path.test(route)) console.log(r.component);
-}
-function goTo(path) {
-    history.pushState({
-    }, "", path);
-    handleRoute(path);
-}
-function findAndProccessLinks() {
-    const div1 = document.querySelector(".div-1");
-    div1.addEventListener("click", ()=>{
-        goTo("/div1");
-    });
-}
+var _welcome = require("./pages/welcome");
+var _step1 = require("./pages/step-1");
+var _thankyou = require("./pages/thankyou");
+const routes = [
+    {
+        path: /\//,
+        component: _welcome.initWelcome
+    },
+    {
+        path: /\/step-1/,
+        component: _step1.initStep1
+    },
+    {
+        path: /\/thankyou/,
+        component: _thankyou.initThankYou
+    }, 
+];
 function initRouter(container) {
+    function goTo(path) {
+        history.pushState({
+        }, "", path);
+        handleRoute(path);
+    }
+    function handleRoute(route) {
+        for (const r of routes)if (r.path.test(route)) {
+            const el = r.component({
+                goTo: goTo
+            });
+            if (container.firstChild) container.firstChild.remove();
+            container.appendChild(el);
+        }
+    }
     handleRoute(location.pathname);
+    window.onpopstate = function() {
+        handleRoute(location.pathname);
+    };
+}
+
+},{"./pages/welcome":"bFh5y","./pages/step-1":"1N4ER","./pages/thankyou":"2xi2p","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"bFh5y":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initWelcome", ()=>initWelcome
+);
+function initWelcome(params) {
+    const div = document.createElement("div");
+    const style = document.createElement("style");
+    style.innerHTML = `.welcome-container{\n    padding: 50px 30px 100px 30px;\n    display: grid;\n    gap: 25px;\n  }\n  \n  .title-label{\n    margin-top: 60px;\n    margin-bottom: 20px;\n  }`;
+    div.innerHTML = `\n  <header-comp></header-comp>\n\n  <div class="welcome-container">\n    <custom-text variant="title">Te damos la bienvenida a esta página</custom-text>\n  \n    <custom-text variant="body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam consequuntur iure voluptas quia accusantium voluptatum aspernatur provident et repudiandae quam veritatis, libero porro sit beatae laboriosam a aut consequatur quidem?</custom-text>\n  \n    <custom-text variant="sub-title" class="title-label">Para continuar ingresá tu nombre</custom-text>\n  \n    <text-field label="Nombre" placeh="  Ingresá tu nombre"></text-field>\n  \n    <custom-button class="buttonStartEl" button-variant="button-blue">Comenzar</custom-button>\n </div>\n\n  <footer-comp></footer-comp>\n   `;
+    const button = div.querySelector(".buttonStartEl");
+    button.addEventListener("click", ()=>{
+        params.goTo("/step-1");
+    });
+    div.appendChild(style);
+    return div;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
@@ -530,6 +566,202 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["8uBhv","4aleK"], "4aleK", "parcelRequire4534")
+},{}],"1N4ER":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initStep1", ()=>initStep1
+);
+function initStep1(params) {
+    const div = document.createElement("div");
+    const style = document.createElement("style");
+    style.innerHTML = `\n  .step-1__container{\n    padding: 50px 30px 100px 30px;\n    display: grid;\n    gap: 45px\n  }\n  `;
+    div.innerHTML = `\n  <header-comp></header-comp>\n  <div class="step-1__container">\n    <custom-text variant="title">Necesitamos algunos datos más</custom-text>\n    <text-field label="Email" placeh=""></text-field>\n    <text-field label="Comida Favorita" placeh=""></text-field>\n    <select-field></select-field>\n    <custom-button button-variant="button-blue" class="button-continue">Continuar</custom-button>\n    <custom-button button-variant="button-white" class="button-back">Volver</custom-button>\n  </div>\n\n  <footer-comp></footer-comp>\n  `;
+    div.appendChild(style);
+    div.querySelector(".button-continue").addEventListener("click", function() {
+        params.goTo("/thankyou");
+    });
+    div.querySelector(".button-back").addEventListener("click", function() {
+        params.goTo("/welcome");
+    });
+    return div;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"2xi2p":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initThankYou", ()=>initThankYou
+);
+function initThankYou(params) {
+    const div = document.createElement("div");
+    div.innerHTML = `\n  <header-comp></header-comp>\n  <div style="padding:30px; height: 70vh;">\n  <custom-text variant="title">Gracias</custom-text>\n  <div style="margin: 40px 0px;">\n      <custom-text variant="sub-title">Toda la información que nos brindaste es muy importante</custom-text>\n    </div>\n    <custom-button class="buttonBack" button-variant="button-blue">De nada</custom-button>\n  </div>\n  <footer-comp></footer-comp>`;
+    div.querySelector(".buttonBack").addEventListener("click", ()=>{
+        params.goTo("/welcome");
+    });
+    return div;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"1WBLn":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initHeaderComp", ()=>initHeaderComp
+);
+function initHeaderComp() {
+    class HeaderComp extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const div = document.createElement("div");
+            const style = document.createElement("style");
+            style.textContent = `\n      .header {\n        background-color: #ff8282;\n        width: 100%;\n        height: 80px;\n        display: flex;\n        flex-direction: column;\n        justify-content: center;\n        text-align: center;\n      }\n      `;
+            div.innerHTML = `\n        <h3>COMPONENTE HEADER</h3>`;
+            shadow.appendChild(style);
+            shadow.appendChild(div);
+            div.classList.add("header");
+        }
+    }
+    customElements.define("header-comp", HeaderComp);
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"l7C0L":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initTextField", ()=>initTextField
+);
+function initTextField() {
+    customElements.define("text-field", class extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            const label = this.getAttribute("label");
+            const placeh = this.getAttribute("placeh");
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const div = document.createElement("div");
+            const style = document.createElement("style");
+            style.innerHTML = `\n          *{\n          box-sizing: border-box;\n        }\n\n          .label{\n              font-size: 18px;\n              display: block;\n              \n        }\n  \n          .input{\n            display: block;\n            height: 55px;\n            margin: 0 auto;\n            width: 100%;\n            border-radius: 4px;\n            border: solid 3px\n        }\n        `;
+            div.innerHTML = `\n      <label class="label">${label}</label>\n      <input class="input" type="text" placeholder="${placeh}"/>\n      `;
+            shadow.appendChild(style);
+            shadow.appendChild(div);
+        }
+    });
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"4nDUJ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initFooterComp", ()=>initFooterComp
+);
+function initFooterComp() {
+    class FooterComp extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const div = document.createElement("div");
+            const style = document.createElement("style");
+            style.textContent = `\n        .footer {\n          background-color: #FFA0EA;\n          width: 100%;\n          height: 200px;\n          display: flex;\n          flex-direction: column;\n          justify-content: center;\n          text-align: center;\n        }\n        `;
+            div.innerHTML = `\n          <h3>COMPONENTE FOOTER</h3>`;
+            shadow.appendChild(style);
+            shadow.appendChild(div);
+            div.classList.add("footer");
+        }
+    }
+    customElements.define("footer-comp", FooterComp);
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"8YEyP":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initTextComp", ()=>initTextComp
+);
+function initTextComp() {
+    class TextComp extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            //obtiene la clase "variant" del custom element declarado, (title o body), para dsp usarlo
+            const variant = this.getAttribute("variant") || "body";
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const div = document.createElement("div");
+            const style = document.createElement("style");
+            style.innerHTML = `\n        .title{\n            font-size: 52px;\n            font-weight: bold;\n      }\n\n      .body{\n        font-size: 18px;\n  }\n\n    .sub-title{\n      font-size: 22px;\n      font-weight: bold;\n    }\n      `;
+            div.className = variant;
+            div.textContent = this.textContent;
+            shadow.appendChild(style);
+            shadow.appendChild(div);
+        }
+    }
+    customElements.define("custom-text", TextComp);
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"3uBrB":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initButtonComp", ()=>initButtonComp
+);
+function initButtonComp() {
+    customElements.define("custom-button", class extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            const buttonVariant = this.getAttribute("button-variant");
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const button = document.createElement("button");
+            const style = document.createElement("style");
+            style.innerHTML = `\n         .button-blue{\n           padding: 15px;\n           background-color: #9CBBE9;\n           width: 100%;\n           font-family: 'Roboto', sans-serif;\n           font-size: 22px;\n           border: white;\n           border-radius: 5px;\n           margin-bottom: 20px;\n         }\n\n         .button-white{\n          background-color: white;\n          padding: 15px;\n          width: 100%;\n          font-family: 'Roboto', sans-serif;\n          font-size: 22px;\n          border: black 3px solid;\n          border-radius: 5px;\n          margin-bottom: 40px;\n         }\n        `;
+            button.textContent = this.textContent;
+            shadow.appendChild(style);
+            button.className = buttonVariant;
+            shadow.appendChild(button);
+        }
+    });
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"l2z65":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "initSelectField", ()=>initSelectField
+);
+function initSelectField() {
+    customElements.define("select-field", class extends HTMLElement {
+        constructor(){
+            super();
+            this.render();
+        }
+        render() {
+            var shadow = this.attachShadow({
+                mode: "open"
+            });
+            const div = document.createElement("div");
+            const style = document.createElement("style");
+            style.innerHTML = `\n            *{\n            box-sizing: border-box;\n          }\n  \n          .select-el{\n            display: block;\n            height: 55px;\n            margin: 0 auto;\n            width: 100%;\n            border-radius: 4px;\n            border: solid 3px;\n            background-color: white;\n            font-family: 'Roboto', sans-serif;\n          }\n          `;
+            div.innerHTML = `\n        <select class="select-el" name="select">\n          <option value="value1" selected>Piedra</option>\n          <option value="value2">Papel</option>\n          <option value="value3">Tijera</option>\n        </select>\n        `;
+            shadow.appendChild(style);
+            shadow.appendChild(div);
+        }
+    });
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["8uBhv","4aleK"], "4aleK", "parcelRequire4534")
 
 //# sourceMappingURL=index.b31310b1.js.map
